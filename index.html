@@ -3,177 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snacks</title>
+    <title data-translate="title">Snacks</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
-        // Función para cambiar el idioma
-        function changeLanguage(lang) {
-            localStorage.setItem("lang", lang);  // Guarda el idioma seleccionado en localStorage
-            location.reload();  // Recarga la página para aplicar el cambio
-        }
+        document.addEventListener("DOMContentLoaded", function () {
+            function changeLanguage(lang) {
+                localStorage.setItem("lang", lang);
+                loadLanguage();
+            }
 
-        // Función para obtener el idioma almacenado
-        function getLanguage() {
-            return localStorage.getItem("lang") || "es";  // Si no hay idioma guardado, usa español por defecto
-        }
+            function getLanguage() {
+                return localStorage.getItem("lang") || "es";
+            }
 
-        // Función para cargar los textos de acuerdo al idioma
-        function loadLanguage() {
-            const lang = getLanguage();
-            const translations = {
-                es: {
-                    home: "Inicio",
-                    servicesMenu: "Servicios",
-                    communion: "Comunión",
-                    xvYears: "XV Años",
-                    birthdays: "Cumpleaños",
-                    weddings: "Bodas",
-                    products: "Productos",
-                    packages: "Paquetes",
-                    gallery: "Galería",
-                    reserveNow: "Reserva Ahora",
-                    contact: "Contacto",
-                    language: "Idioma",
-                    carrito: "El carrito",
-                    mesa: "Mesa",
-                    vaso: "Vaso"
-                },
-                en: {
-                    home: "Home",
-                    servicesMenu: "Services",
-                    communion: "Communion",
-                    xvYears: "XV Years",
-                    birthdays: "Birthdays",
-                    weddings: "Weddings",
-                    products: "Products",
-                    packages: "Packages",
-                    gallery: "Gallery",
-                    reserveNow: "Reserve Now",
-                    contact: "Contact",
-                    language: "Language",
-                    carrito: "The Cart",
-                    mesa: "Table",
-                    vaso: "Glass"
+            function loadLanguage() {
+                const lang = getLanguage();
+                const translations = {
+                    es: {
+                        title: "Snacks",
+                        home: "Inicio",
+                        products: "Productos",
+                        packages: "Paquetes",
+                        contact: "Contacto",
+                        carrito: "El carrito",
+                        mesa: "Mesa",
+                        vaso: "Vaso",
+                        reserveNow: "Reserva Ahora",
+                        name: "Nombre",
+                        date: "Fecha",
+                        deposit: "Anticipo (MXN)",
+                        submit: "Realizar Reserva",
+                        followUs: "Síguenos en",
+                        language: "Idioma",
+                        aboutUs: "Sobre Nosotros",
+                        aboutUsText: "Somos una empresa dedicada a ofrecer snacks deliciosos para eventos especiales. Nos especializamos en bodas, cumpleaños, comuniones y más. Nuestro objetivo es hacer de tu evento una experiencia única con nuestros productos de alta calidad.",
+                        package: "Paquete",
+                        nonRefundable: "El anticipo no es reembolsable, pero puedes cambiar la fecha.",
+                        packageAvailability: "Disponibilidad del Paquete"
+                    },
+                    en: {
+                        title: "Snacks",
+                        home: "Home",
+                        products: "Products",
+                        packages: "Packages",
+                        contact: "Contact",
+                        carrito: "The Cart",
+                        mesa: "Table",
+                        vaso: "Glass",
+                        reserveNow: "Reserve Now",
+                        name: "Name",
+                        date: "Date",
+                        deposit: "Deposit (MXN)",
+                        submit: "Submit Reservation",
+                        followUs: "Follow us on",
+                        language: "Language",
+                        aboutUs: "About Us",
+                        aboutUsText: "We are a company dedicated to offering delicious snacks for special events. We specialize in weddings, birthdays, communions, and more. Our goal is to make your event a unique experience with our high-quality products.",
+                        package: "Package",
+                        nonRefundable: "The deposit is non-refundable, but you can change the date.",
+                        packageAvailability: "Package Availability"
+                    }
+                };
+
+                document.querySelectorAll("[data-translate]").forEach(el => {
+                    const key = el.getAttribute("data-translate");
+                    el.textContent = translations[lang][key] || el.textContent;
+                });
+
+                document.getElementById("languageDropdownButton").textContent = lang === "es" ? "🇲🇽 Español" : "🇺🇸 English";
+            }
+
+            loadLanguage();
+
+            document.getElementById("languageDropdownButton").addEventListener("click", function (event) {
+                event.preventDefault();
+                changeLanguage(getLanguage() === "es" ? "en" : "es");
+            });
+        });
+
+        const availablePackages = [
+            { id: 1, name: "Paquete Básico", price: 1000, available: true },
+            { id: 2, name: "Paquete Premium", price: 2000, available: true },
+            { id: 3, name: "Paquete Deluxe", price: 3000, available: true }
+        ];
+
+        function updatePackageAvailability() {
+            const packageSelect = document.getElementById("paquete");
+            packageSelect.innerHTML = '<option value="" selected disabled>' + (getLanguage() === "es" ? "Selecciona un paquete" : "Select a package") + '</option>';
+            availablePackages.forEach(pkg => {
+                if (pkg.available) {
+                    const option = document.createElement("option");
+                    option.value = pkg.id;
+                    option.textContent = pkg.name + " - " + (getLanguage() === "es" ? "$" : "$") + pkg.price;
+                    packageSelect.appendChild(option);
                 }
-            };
-
-            const texts = translations[lang];
-
-            document.getElementById("homeLink").textContent = texts.home;
-            document.getElementById("servicesMenu").textContent = texts.servicesMenu;
-            document.getElementById("comunionLink").textContent = texts.communion;
-            document.getElementById("xvLink").textContent = texts.xvYears;
-            document.getElementById("cumpleanosLink").textContent = texts.birthdays;
-            document.getElementById("bodasLink").textContent = texts.weddings;
-            document.getElementById("productosLink").textContent = texts.products;
-            document.getElementById("paquetesLink").textContent = texts.packages;
-            document.getElementById("galeriaLink").textContent = texts.gallery;
-            document.getElementById("reservaLink").textContent = texts.reserveNow;
-            document.getElementById("contactoLink").textContent = texts.contact;
-            document.getElementById("languageDropdownButton").textContent = texts.language;
+            });
         }
 
-        window.onload = loadLanguage; // Carga el idioma cuando la página se carga
+        document.addEventListener("DOMContentLoaded", updatePackageAvailability);
+
+        function handlePackageChange() {
+            const selectedPackageId = document.getElementById("paquete").value;
+            const selectedPackage = availablePackages.find(pkg => pkg.id == selectedPackageId);
+            if (selectedPackage) {
+                const anticipo = selectedPackage.price * 0.5;
+                document.getElementById("anticipo").value = anticipo;
+            }
+        }
+
+        function handleReservationFormSubmit(event) {
+            event.preventDefault();
+
+            const nombre = document.getElementById("nombreReserva").value.trim();
+            const anticipo = document.getElementById("anticipo").value;
+            const paqueteId = document.getElementById("paquete").value;
+            const fecha = document.getElementById("fechaReserva").value;
+
+            if (nombre === "" || anticipo <= 0 || !paqueteId || !fecha) {
+                alert(getLanguage() === "es" ? "Por favor, completa todos los campos correctamente." : "Please, fill out all the fields correctly.");
+                return;
+            }
+
+            // Marcar el paquete como no disponible para la fecha seleccionada
+            const selectedPackage = availablePackages.find(pkg => pkg.id == paqueteId);
+            if (selectedPackage) {
+                selectedPackage.available = false; // El paquete ya no está disponible
+                alert(getLanguage() === "es" ? "Reserva realizada con éxito. El paquete no está disponible para esta fecha." : "Reservation made successfully. The package is no longer available for this date.");
+                updatePackageAvailability();
+            }
+        }
     </script>
 </head>
 <body>
 
-<!-- Barra de navegación con grid -->
-<nav class="navbar bg-body-tertiary">
-    <div class="container text-center">
-        <div class="row align-items-center w-100">
-            <div class="col">
-                <a class="navbar-brand" href="index.html">Snacks</a>
-            </div>
-            <div class="col">
-                <a class="nav-link active" href="index.html" id="homeLink">Home</a>
-            </div>
-            <div class="col">
-                <!-- Menú de Servicios -->
-                <div class="dropdown" data-bs-theme="light">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="servicesMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span id="servicesMenu">Servicios</span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="servicesMenuButton">
-                        <li><a class="dropdown-item" href="Comunión.html">Comunión</a></li>
-                        <li><a class="dropdown-item" href="xv.html">XV Años</a></li>
-                        <li><a class="dropdown-item" href="cumpleanos.html">Cumpleaños</a></li>
-                        <li><a class="dropdown-item" href="bodas.html">Bodas</a></li>
-
-                    </ul>
-                </div>
-            </div>
-            <div class="col">
-                <!-- Menú de Menú -->
-                <div class="dropdown" data-bs-theme="light">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="menuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                        Menú
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="menuButton">
-                        <li><a class="dropdown-item" href="productos.html" id="productosLink">Productos</a></li>
-                        <li><a class="dropdown-item" href="paquetes.html" id="paquetesLink">Paquetes</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="galeria.html" id="galeriaLink">Galería</a></li>
-                        <li><a class="dropdown-item" href="reserva.html" id="reservaLink">Reserva Ahora</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col">
-                <a class="nav-link disabled" aria-disabled="true" id="contactoLink">Contacto</a>
-            </div>
-            <div class="col">
-                <!-- Selector de idioma -->
-                <div class="dropdown">
-                    <button class="btn btn-light dropdown-toggle" type="button" id="languageDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
-                        🇲🇽 Idioma
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="languageDropdownButton">
-                        <li><a class="dropdown-item" href="#" onclick="changeLanguage('es')">🇲🇽 Español</a></li>
-                        <li><a class="dropdown-item" href="#" onclick="changeLanguage('en')">🇺🇸 English</a></li>
-                    </ul>
-                </div>
-            </div>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="index.html" data-translate="title">Snacks</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="index.html" data-translate="home">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link" href="productos.html" data-translate="products">Productos</a></li>
+                <li class="nav-item"><a class="nav-link" href="paquetes.html" data-translate="packages">Paquetes</a></li>
+                <li class="nav-item"><a class="nav-link" href="contacto.html" data-translate="contact">Contacto</a></li>
+                <li class="nav-item">
+                    <button class="btn btn-light" id="languageDropdownButton" data-translate="language">🇲🇽 Español</button>
+                </li>
+            </ul>
         </div>
     </div>
 </nav>
 
-<!-- Carrusel de imágenes -->
-<div id="carouselExampleDark" class="carousel carousel-dark slide">
-    <div class="carousel-indicators">
-        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active"></button>
-        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1"></button>
-        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2"></button>
-    </div>
+<!-- Carrusel -->
+<div id="carouselExampleDark" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-inner">
-        <div class="carousel-item active" data-bs-interval="10000">
+        <div class="carousel-item active">
             <img src="https://expowedding.mx/wp-content/uploads/2022/10/el-carrito-snack-bar-coatzacoalcos-bodas-y-eventos-expo-wedding-coatza-800x600.jpg" class="d-block w-100" alt="El carrito">
-            <div class="carousel-caption d-none d-md-block">
-                <h5 id="carrito">El carrito</h5>
-                <p>Tu mejor opción para tus eventos.</p>
+            <div class="carousel-caption">
+                <h5 data-translate="carrito">El carrito</h5>
             </div>
         </div>
-        <div class="carousel-item" data-bs-interval="2000">
-            <img src="https://qro.alabio.mx/imagenes/carritodebotana-2183.jpg" class="d-block w-100" alt="Carrito de botanas">
-            <div class="carousel-caption d-none d-md-block">
-                <h5 id="mesa">Mesa</h5>
-                <p>Presentación de nuestro menú.</p>
+        <div class="carousel-item">
+            <img src="https://qro.alabio.mx/imagenes/carritodebotana-2183.jpg" class="d-block w-100" alt="Mesa">
+            <div class="carousel-caption">
+                <h5 data-translate="mesa">Mesa</h5>
             </div>
         </div>
         <div class="carousel-item">
             <img src="https://cdn0.bodas.com.mx/vendor/0159/3_2/960/jpeg/3b442837-859a-446e-ab1c-a0887f8deaf2_5_360159-165515043610054.jpeg" class="d-block w-100" alt="Vaso">
-            <div class="carousel-caption d-none d-md-block">
-                <h5 id="vaso">Vaso</h5>
-                <p>Lo más rico para tus eventos.</p>
+            <div class="carousel-caption">
+                <h5 data-translate="vaso">Vaso</h5>
             </div>
         </div>
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    </button>
 </div>
 
 <!-- Sección Sobre Nosotros -->
@@ -183,33 +187,50 @@
             <img src="https://cdn0.bodas.com.mx/vendor/0159/3_2/960/jpeg/3b442837-859a-446e-ab1c-a0887f8deaf2_5_360159-165515043610054.jpeg" class="img-fluid rounded" alt="Vaso">
         </div>
         <div class="col-md-6">
-            <h2>Sobre Nosotros</h2>
-            <p>Somos una empresa dedicada a ofrecer snacks deliciosos para eventos especiales. Nos especializamos en bodas, cumpleaños, comuniones y más. Nuestro objetivo es hacer de tu evento una experiencia única con nuestros productos de alta calidad.</p>
+            <h2 data-translate="aboutUs">Sobre Nosotros</h2>
+            <p data-translate="aboutUsText">Somos una empresa dedicada a ofrecer snacks deliciosos para eventos especiales. Nos especializamos en bodas, cumpleaños, comuniones y más. Nuestro objetivo es hacer de tu evento una experiencia única con nuestros productos de alta calidad.</p>
         </div>
     </div>
 </section>
+
+<!-- Formulario de Reservas -->
 <section class="container my-5">
-    <h2 class="text-center">Contáctanos</h2>
-    <form>
+    <h2 class="text-center" data-translate="reserveNow">Reserva Ahora</h2>
+    <form id="reservationForm" onsubmit="handleReservationFormSubmit(event)">
         <div class="mb-3">
-            <label for="nombre" class="form-label">Nombre</label>
-            <input type="text" class="form-control" id="nombre" required>
+            <label for="nombreReserva" class="form-label" data-translate="name">Nombre</label>
+            <input type="text" class="form-control" id="nombreReserva" required>
         </div>
         <div class="mb-3">
-            <label for="email" class="form-label">Correo Electrónico</label>
-            <input type="email" class="form-control" id="email" required>
+            <label for="fechaReserva" class="form-label" data-translate="date">Fecha</label>
+            <input type="date" class="form-control" id="fechaReserva" required>
         </div>
         <div class="mb-3">
-            <label for="mensaje" class="form-label">Mensaje</label>
-            <textarea class="form-control" id="mensaje" rows="3" required></textarea>
+            <label for="paquete" class="form-label" data-translate="package">Paquete</label>
+            <select class="form-control" id="paquete" required onchange="handlePackageChange()">
+                <option value="" selected disabled>Selecciona un paquete</option>
+                <option value="Barra de Snacks">Barra de Snacks</option>
+                <option value="Barra de Postres">Barra de Postres</option>
+                <option value="Barra de Dori Locos">Barra de Dori Locos</option>
+                <option value="Barra de Maruchan">Barra de Maruchan</option>
+                <option value="Barra de Papas">Barra de Papas</option>
+            </select>
         </div>
-        <button type="submit" class="btn btn-primary">Enviar</button>
+        <div class="mb-3">
+            <label for="anticipo" class="form-label" data-translate="deposit">Anticipo</label>
+            <input type="number" class="form-control" id="anticipo" readonly>
+        </div>
+        <button type="submit" class="btn btn-primary" data-translate="submit">Realizar Reserva</button>
     </form>
 </section>
-<a href="" class="btn btn-success position-fixed bottom-0 end-0 m-3" style="border-radius: 50%;">
-    📩WhatsApp
-</a>
 
+<!-- Pie de página -->
+<footer class="bg-dark text-white py-4">
+    <div class="container text-center">
+        <p data-translate="followUs">Síguenos en nuestras redes sociales:</p>
+        <p><a href="#" class="text-white">Facebook</a> | <a href="#" class="text-white">Instagram</a> | <a href="#" class="text-white">Twitter</a></p>
+    </div>
+</footer>
 
 </body>
 </html>
